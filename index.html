@@ -722,17 +722,9 @@
           <h2>🏆 Топ рыбаков</h2>
           <div class="sub">Пока это стильная заглушка. Позже подключим реальные данные из бота.</div>
 
-          <div class="top-list">
-            <div class="top-item">
-              <div class="top-left">
-                <div class="place">🥇</div>
-                <div class="player">
-                  <strong>@hustle_mxde</strong>
-                  <span>Главный рыбак канала</span>
-                </div>
-              </div>
-              <div class="money">999 ₽</div>
-            </div>
+      <div class="top-list" id="top-list">
+        Загрузка топа...
+      </div>
 
             <div class="top-item">
               <div class="top-left">
@@ -841,16 +833,52 @@
     </div>
   </div>
 
-  <script>
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("show");
-        }
-      });
-    }, { threshold: 0.12 });
+<script>
+  // анимация появления
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+      }
+    });
+  }, { threshold: 0.12 });
 
-    document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
-  </script>
+  document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+  // загрузка топа
+  async function loadTop() {
+    try {
+      const response = await fetch("./top.json");
+      const data = await response.json();
+
+      const container = document.getElementById("top-list");
+
+      container.innerHTML = "";
+
+      data.top.forEach(player => {
+        const html = `
+          <div class="top-item">
+            <div class="top-left">
+              <div class="place">${player.place}</div>
+              <div class="player">
+                <strong>@${player.username}</strong>
+                <span>${player.subtitle}</span>
+              </div>
+            </div>
+            <div class="money">${player.money} ₽</div>
+          </div>
+        `;
+
+        container.innerHTML += html;
+      });
+
+    } catch (error) {
+      document.getElementById("top-list").innerHTML = "Ошибка загрузки топа";
+      console.error(error);
+    }
+  }
+
+  loadTop();
+</script>
 </body>
 </html>
