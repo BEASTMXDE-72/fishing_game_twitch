@@ -1,0 +1,9 @@
+{
+  "top": [
+    { "place": "🥇", "username": "hustle_mxde", "money": 999, "subtitle": "Главный рыбак канала" },
+    { "place": "🥈", "username": "viewer_two", "money": 640, "subtitle": "Очень близко к топ-1" },
+    { "place": "🥉", "username": "viewer_three", "money": 480, "subtitle": "Уверенно держится в топе" },
+    { "place": "4", "username": "viewer_four", "money": 320, "subtitle": "Стабильные уловы" },
+    { "place": "5", "username": "viewer_five", "money": 250, "subtitle": "Врывается в рейтинг" }
+  ]
+}
