@@ -5,450 +5,596 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Рыбалка hustle_mxde</title>
   <style>
-    :root {
-      --bg-1: #07111f;
-      --bg-2: #0d1b2d;
-      --panel: rgba(17, 24, 39, 0.72);
-      --panel-border: rgba(255, 255, 255, 0.08);
-      --text: #eef4ff;
-      --muted: #9fb0cc;
-      --accent: #7c9cff;
-      --accent-2: #5eead4;
-      --gold: #fbbf24;
-      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-      --radius: 22px;
-      --maxw: 980px;
+    :root{
+      --bg:#07111f;
+      --bg2:#0c1830;
+      --panel:rgba(10,16,30,.62);
+      --panel-strong:rgba(15,24,43,.78);
+      --border:rgba(255,255,255,.09);
+      --text:#eef4ff;
+      --muted:#9db0cf;
+      --accent:#7c9cff;
+      --accent2:#5eead4;
+      --gold:#fbbf24;
+      --purple:#a855f7;
+      --blue:#3b82f6;
+      --green:#22c55e;
+      --shadow:0 18px 40px rgba(0,0,0,.32);
+      --radius:24px;
+      --maxw:1120px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      color: var(--text);
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter, Arial, sans-serif;
+      color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(94, 234, 212, 0.12), transparent 28%),
-        radial-gradient(circle at top right, rgba(124, 156, 255, 0.16), transparent 32%),
-        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
-      min-height: 100vh;
-      overflow-x: hidden;
+        radial-gradient(circle at 10% 15%, rgba(94,234,212,.14), transparent 22%),
+        radial-gradient(circle at 90% 10%, rgba(124,156,255,.16), transparent 26%),
+        radial-gradient(circle at 80% 80%, rgba(168,85,247,.10), transparent 20%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+      min-height:100vh;
+      overflow-x:hidden;
     }
 
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: auto;
-      width: 380px;
-      height: 380px;
-      border-radius: 999px;
-      filter: blur(80px);
-      opacity: 0.18;
-      pointer-events: none;
-      z-index: 0;
+    .bg-orb, .bg-orb2, .bg-orb3{
+      position:fixed;
+      border-radius:999px;
+      filter:blur(70px);
+      opacity:.18;
+      pointer-events:none;
+      z-index:0;
+      animation: floatOrb 10s ease-in-out infinite;
+    }
+    .bg-orb{
+      width:260px;height:260px;left:-60px;top:70px;background:#5eead4;
+    }
+    .bg-orb2{
+      width:320px;height:320px;right:-90px;top:120px;background:#7c9cff;animation-delay:-3s;
+    }
+    .bg-orb3{
+      width:240px;height:240px;left:50%;bottom:20px;background:#a855f7;animation-delay:-6s;
     }
 
-    body::before {
-      left: -80px;
-      top: 80px;
-      background: #5eead4;
+    @keyframes floatOrb{
+      0%,100%{transform:translateY(0) translateX(0)}
+      50%{transform:translateY(-18px) translateX(10px)}
     }
 
-    body::after {
-      right: -100px;
-      top: 160px;
-      background: #7c9cff;
+    .particles{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      overflow:hidden;
+    }
+    .bubble{
+      position:absolute;
+      bottom:-40px;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      box-shadow:0 0 12px rgba(255,255,255,.12);
+      animation: rise linear infinite;
+    }
+    .bubble:nth-child(1){left:8%; animation-duration:16s; animation-delay:0s}
+    .bubble:nth-child(2){left:18%; width:7px; height:7px; animation-duration:20s; animation-delay:2s}
+    .bubble:nth-child(3){left:28%; width:12px; height:12px; animation-duration:18s; animation-delay:5s}
+    .bubble:nth-child(4){left:40%; width:9px; height:9px; animation-duration:22s; animation-delay:1s}
+    .bubble:nth-child(5){left:54%; width:6px; height:6px; animation-duration:17s; animation-delay:4s}
+    .bubble:nth-child(6){left:66%; width:11px; height:11px; animation-duration:21s; animation-delay:3s}
+    .bubble:nth-child(7){left:78%; width:8px; height:8px; animation-duration:19s; animation-delay:7s}
+    .bubble:nth-child(8){left:89%; width:13px; height:13px; animation-duration:24s; animation-delay:6s}
+
+    @keyframes rise{
+      from{transform:translateY(0) scale(1); opacity:0}
+      10%{opacity:1}
+      to{transform:translateY(-115vh) scale(1.4); opacity:0}
     }
 
-    .shell {
-      position: relative;
-      z-index: 1;
-      width: min(var(--maxw), calc(100% - 28px));
-      margin: 0 auto;
-      padding: 28px 0 50px;
+    .shell{
+      position:relative;
+      z-index:1;
+      width:min(var(--maxw), calc(100% - 24px));
+      margin:0 auto;
+      padding:18px 0 56px;
     }
 
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 34px 28px;
-      border-radius: 28px;
+    .topnav{
+      position:sticky;
+      top:12px;
+      z-index:20;
+      margin-bottom:18px;
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      background:rgba(8,13,25,.58);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+    }
+    .topnav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+    .brand-badge{
+      width:34px;height:34px;border-radius:12px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg, rgba(124,156,255,.25), rgba(94,234,212,.18));
+      border:1px solid rgba(255,255,255,.09);
+    }
+    .nav-links{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .nav-link{
+      color:var(--muted);
+      text-decoration:none;
+      font-size:14px;
+      font-weight:700;
+      padding:10px 12px;
+      border-radius:12px;
+      transition:.2s ease;
+    }
+    .nav-link:hover{
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      padding:40px 28px;
+      border-radius:30px;
       background:
-        linear-gradient(135deg, rgba(124, 156, 255, 0.18), rgba(94, 234, 212, 0.1)),
-        rgba(8, 15, 27, 0.72);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+        linear-gradient(135deg, rgba(124,156,255,.18), rgba(94,234,212,.09)),
+        rgba(9,15,27,.72);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:-40px;
+      top:-40px;
+      width:220px;
+      height:220px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(124,156,255,.24), transparent 68%);
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      left:-60px;
+      bottom:-60px;
+      width:240px;
+      height:240px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(94,234,212,.16), transparent 70%);
+    }
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:14px;
+      font-weight:800;
+    }
+    .hero h1{
+      margin:18px 0 10px;
+      font-size:clamp(34px, 5vw, 62px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+      max-width:780px;
+    }
+    .hero p{
+      margin:0;
+      max-width:720px;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.7;
     }
 
-    .hero::before {
-      content: "";
-      position: absolute;
-      right: -60px;
-      top: -60px;
-      width: 220px;
-      height: 220px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(124, 156, 255, 0.25), transparent 70%);
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:24px;
+    }
+    .hero-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:13px 18px;
+      border-radius:16px;
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(135deg, rgba(124,156,255,.20), rgba(94,234,212,.12));
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+      transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+    .hero-btn::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg, transparent 10%, rgba(255,255,255,.18) 45%, transparent 80%);
+      transform:translateX(-120%);
+      transition:transform .5s ease;
+    }
+    .hero-btn:hover{
+      transform:translateY(-3px) scale(1.03);
+      border-color:rgba(124,156,255,.35);
+      box-shadow:0 12px 28px rgba(124,156,255,.16);
+    }
+    .hero-btn:hover::before{
+      transform:translateX(120%);
     }
 
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+    .hero-stats{
+      margin-top:26px;
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:12px;
+    }
+    .hero-stat{
+      padding:14px 16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .hero-stat strong{
+      display:block;
+      font-size:22px;
+      margin-bottom:4px;
+    }
+    .hero-stat span{
+      color:var(--muted);
+      font-size:13px;
     }
 
-    .hero h1 {
-      margin: 18px 0 10px;
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
+    .grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:18px;
+      margin-top:18px;
+    }
+    .stack{display:grid; gap:18px}
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      transition:transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+    .card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(124,156,255,.16);
+      box-shadow:0 20px 44px rgba(0,0,0,.35);
+    }
+    .card h2{
+      margin:0 0 14px;
+      font-size:23px;
+      letter-spacing:-.02em;
+    }
+    .sub{
+      margin:-2px 0 16px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
     }
 
-    .hero p {
-      margin: 0;
-      max-width: 720px;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.7;
+    .commands{
+      display:grid;
+      gap:12px;
+    }
+    .command{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
+      align-items:center;
+      padding:15px 16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+      text-align:left;
+      transition:transform .22s ease, border-color .22s ease, background .22s ease;
+    }
+    .command:hover{
+      transform:translateX(4px);
+      border-color:rgba(124,156,255,.18);
+      background:rgba(255,255,255,.045);
+    }
+    .command-icon{
+      width:44px;height:44px;border-radius:14px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg, rgba(124,156,255,.26), rgba(94,234,212,.15));
+      border:1px solid rgba(255,255,255,.07);
+      font-size:20px;
+    }
+    .command strong{
+      display:block;
+      margin-bottom:4px;
+      font-size:15px;
+    }
+    .command span{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
     }
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
+    .tips{
+      display:grid;
+      gap:12px;
+    }
+    .tip{
+      padding:15px 16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+      text-align:left;
+      color:var(--muted);
+      line-height:1.65;
+      font-size:14px;
+    }
+    .tip strong{
+      color:var(--text);
+      display:inline-block;
+      margin-bottom:4px;
     }
 
-    .hero-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 18px;
-      border-radius: 14px;
-
-      background: linear-gradient(135deg, rgba(124,156,255,0.2), rgba(94,234,212,0.12));
-      border: 1px solid rgba(255,255,255,0.08);
-
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 700;
-
-      transition: all 0.25s ease;
-      position: relative;
-      overflow: hidden;
+    .top-list{
+      display:grid;
+      gap:10px;
     }
-    
-    .hero-btn::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
-      opacity: 0;
-      transition: opacity 0.25s ease;
+    .top-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+      transition:transform .22s ease, border-color .22s ease;
     }
-
-    .hero-btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      border-color: rgba(124,156,255,0.4);
+    .top-item:hover{
+      transform:translateX(4px);
+      border-color:rgba(124,156,255,.18);
     }
-
-    .hero-btn:hover::before {
-      opacity: 1;
+    .top-left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 18px;
-      margin-top: 18px;
+    .place{
+      width:36px;height:36px;border-radius:12px;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,.06);
+      font-weight:900;
+      flex-shrink:0;
     }
-
-    .stack {
-      display: grid;
-      gap: 18px;
+    .player{
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+      text-align:left;
     }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+    .player strong{
+      font-size:15px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .player span{
+      color:var(--muted);
+      font-size:13px;
+    }
+    .money{
+      font-weight:900;
+      color:var(--gold);
+      white-space:nowrap;
+      flex-shrink:0;
     }
 
-    .card h2 {
-      margin: 0 0 16px;
-      font-size: 22px;
-      letter-spacing: -0.02em;
+    .rarities{
+      display:grid;
+      gap:10px;
+    }
+    .rarity{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 15px;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+    }
+    .rarity-left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:800;
+    }
+    .dot{
+      width:12px;height:12px;border-radius:999px;box-shadow:0 0 14px currentColor;
+    }
+    .rarity small{color:var(--muted);font-size:13px}
+
+    .legend-card{
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(135deg, rgba(251,191,36,.14), rgba(168,85,247,.10)),
+        var(--panel-strong);
+    }
+    .legend-card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius:inherit;
+      padding:1px;
+      background:linear-gradient(135deg, rgba(251,191,36,.35), rgba(168,85,247,.25), rgba(124,156,255,.20));
+      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      pointer-events:none;
+    }
+    .legend-badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.07);
+      color:#ffe7a3;
+      font-weight:800;
+      font-size:13px;
+    }
+    .legend-text{
+      margin-top:14px;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:15px;
     }
 
-    .sub {
-      margin: -4px 0 16px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
+    .footer{
+      margin-top:22px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      opacity:.82;
     }
 
-    .commands {
-      display: grid;
-      gap: 12px;
+    .reveal{
+      opacity:0;
+      transform:translateY(22px);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+    .reveal.show{
+      opacity:1;
+      transform:none;
     }
 
-    .command {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 12px;
-      align-items: center;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      text-align: left;
+    @media (max-width: 920px){
+      .grid{grid-template-columns:1fr}
     }
-
-    .command-icon {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(124, 156, 255, 0.24), rgba(94, 234, 212, 0.16));
-      font-size: 20px;
-    }
-
-    .command strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 15px;
-    }
-
-    .command span {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .rarities {
-      display: grid;
-      gap: 10px;
-    }
-
-    .rarity {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 13px 15px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .rarity-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
-      box-shadow: 0 0 14px currentColor;
-    }
-
-    .rarity small {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .top-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .top-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      text-align: left;
-    }
-
-    .top-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .place {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.06);
-      font-weight: 800;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    .player {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .player strong {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-size: 15px;
-    }
-
-    .player span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .money {
-      font-weight: 800;
-      color: var(--gold);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .tips {
-      display: grid;
-      gap: 12px;
-    }
-
-    .tip {
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      text-align: left;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    .tip strong {
-      display: inline-block;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .footer {
-      margin-top: 22px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      opacity: 0.8;
-    }
-
-    @media (max-width: 860px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding: 26px 20px;
-      }
-
-      .card {
-        padding: 18px;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .shell {
-        width: min(var(--maxw), calc(100% - 16px));
-        padding-top: 16px;
-      }
-
-      .hero h1 {
-        font-size: 32px;
-      }
-
-      .hero p {
-        font-size: 15px;
-      }
-
-      .hero-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .hero-btn {
-        justify-content: center;
-      }
-
-      .top-item {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .money {
-        margin-left: 46px;
-      }
+    @media (max-width: 640px){
+      .shell{width:min(var(--maxw), calc(100% - 16px)); padding-top:10px}
+      .hero{padding:28px 18px}
+      .hero-actions{flex-direction:column; align-items:stretch}
+      .hero-btn{justify-content:center}
+      .hero-stats{grid-template-columns:1fr}
+      .top-item{flex-direction:column; align-items:flex-start}
+      .money{margin-left:48px}
     }
   </style>
 </head>
 <body>
+  <div class="bg-orb"></div>
+  <div class="bg-orb2"></div>
+  <div class="bg-orb3"></div>
+
+  <div class="particles">
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+  </div>
+
   <div class="shell">
-    <section class="hero">
-      <div class="hero-badge">🎣 Мини - игра на стриме у hustle_mxde</div>
-      <h1>Рыбалка в чате Twitch!</h1>
+    <nav class="topnav">
+      <div class="topnav-inner">
+        <div class="brand">
+          <div class="brand-badge">🎣</div>
+          <div>Рыбалка hustle_mxde</div>
+        </div>
+
+        <div class="nav-links">
+          <a class="nav-link" href="#commands">Команды</a>
+          <a class="nav-link" href="#how">Как играть</a>
+          <a class="nav-link" href="#top">Топ</a>
+          <a class="nav-link" href="#rarity">Редкости</a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="hero reveal">
+      <div class="hero-badge">🎮 Мини-игра прямо в Twitch-чате</div>
+      <h1>Лови рыбу, копи рубли и забирай топ стрима</h1>
       <p>
-        Лови рыбу, зарабатывай рубли, попадай в топ и выбивай легендарные уловы.
-        Всё происходит прямо в чате - быстро, понятно и интересно.
+        Пиши команды в чате, выбивай редкие уловы, лови легендарную рыбу и
+        поднимайся в рейтинге рыбаков канала hustle_mxde.
       </p>
+
       <div class="hero-actions">
         <a class="hero-btn" href="#commands">📌 Команды</a>
         <a class="hero-btn" href="#top">🏆 Топ рыбаков</a>
         <a class="hero-btn" href="#how">🔥 Как играть</a>
         <a class="hero-btn" href="#rarity">⭐ Редкости</a>
       </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>5</strong>
+          <span>уровней редкости</span>
+        </div>
+        <div class="hero-stat">
+          <strong>∞</strong>
+          <span>попыток стать топ-1</span>
+        </div>
+        <div class="hero-stat">
+          <strong>24/7</strong>
+          <span>прогресс сохраняется</span>
+        </div>
+      </div>
     </section>
 
     <div class="grid">
       <div class="stack">
-        <section class="card" id="commands">
+        <section class="card reveal" id="commands">
           <h2>📌 Команды игры</h2>
-          <div class="sub">Всё самое важное для старта — в одном месте.</div>
+          <div class="sub">Самое важное для старта — быстро и понятно.</div>
 
           <div class="commands">
             <div class="command">
               <div class="command-icon">🎣</div>
               <div>
                 <strong>!рыбалка</strong>
-                <span>Закинуть удочку и попытаться поймать улов.</span>
+                <span>Закинуть удочку и получить случайный улов.</span>
               </div>
             </div>
 
@@ -456,7 +602,7 @@
               <div class="command-icon">🫙</div>
               <div>
                 <strong>!баланс</strong>
-                <span>Посмотреть текущий баланс после рыбалки.</span>
+                <span>Посмотреть текущий баланс после уловов.</span>
               </div>
             </div>
 
@@ -464,7 +610,7 @@
               <div class="command-icon">📘</div>
               <div>
                 <strong>!профиль</strong>
-                <span>Увидеть свою игровую статистику и лучший улов.</span>
+                <span>Увидеть свою статистику и лучший улов.</span>
               </div>
             </div>
 
@@ -478,29 +624,34 @@
           </div>
         </section>
 
-        <section class="card" id="how">
+        <section class="card reveal" id="how">
           <h2>🔥 Как играть</h2>
+
           <div class="tips">
             <div class="tip">
-              <strong>1. Напиши !рыбалка</strong><br />
-              Бот сгенерирует случайный улов, редкость и награду.
+              <strong>1. Напиши !рыбалка</strong><br>
+              Бот случайно выберет рыбу, редкость, вес и награду.
             </div>
             <div class="tip">
-              <strong>2. Копи рубли</strong><br />
-              Деньги начисляются за успешные уловы и сохраняются между стримами.
+              <strong>2. Копи рубли</strong><br>
+              Деньги за уловы сохраняются между запусками бота.
             </div>
             <div class="tip">
-              <strong>3. Забирай место в топе</strong><br />
-              Чем больше ловишь, тем выше шанс подняться в рейтинг.
+              <strong>3. Следи за профилем</strong><br>
+              Команда <b>!профиль</b> показывает твой прогресс и лучший улов.
+            </div>
+            <div class="tip">
+              <strong>4. Забирай место в топе</strong><br>
+              Чем активнее рыбачишь, тем выше поднимаешься в рейтинге.
             </div>
           </div>
         </section>
       </div>
 
       <div class="stack">
-        <section class="card" id="top">
+        <section class="card reveal" id="top">
           <h2>🏆 Топ рыбаков</h2>
-          <div class="sub">Пока здесь заглушка. Позже подключим живые данные из бота.</div>
+          <div class="sub">Пока это стильная заглушка. Дальше подключим реальные данные из бота.</div>
 
           <div class="top-list">
             <div class="top-item">
@@ -530,7 +681,7 @@
                 <div class="place">🥉</div>
                 <div class="player">
                   <strong>@viewer_three</strong>
-                  <span>Борется за топ-1</span>
+                  <span>Подбирается к вершине</span>
                 </div>
               </div>
               <div class="money">480 ₽</div>
@@ -552,7 +703,7 @@
                 <div class="place">5</div>
                 <div class="player">
                   <strong>@viewer_five</strong>
-                  <span>Подбирается всё ближе</span>
+                  <span>Врывается в топ</span>
                 </div>
               </div>
               <div class="money">250 ₽</div>
@@ -560,12 +711,21 @@
           </div>
         </section>
 
-        <section class="card" id="rarity">
+        <section class="card legend-card reveal">
+          <div class="legend-badge">🌟 Последний легендарный улов</div>
+          <div class="legend-text">
+            Здесь позже можно показывать последнюю легендарную рыбу, пойманную на стриме,
+            чтобы страница выглядела живой и постоянно обновлялась.
+          </div>
+        </section>
+
+        <section class="card reveal" id="rarity">
           <h2>⭐ Редкости</h2>
+
           <div class="rarities">
             <div class="rarity">
               <div class="rarity-left">
-                <span class="dot" style="color:#94a3b8; background:#94a3b8;"></span>
+                <span class="dot" style="color:#94a3b8;background:#94a3b8;"></span>
                 <span>Обычная</span>
               </div>
               <small>Базовый улов</small>
@@ -573,7 +733,7 @@
 
             <div class="rarity">
               <div class="rarity-left">
-                <span class="dot" style="color:#22c55e; background:#22c55e;"></span>
+                <span class="dot" style="color:#22c55e;background:#22c55e;"></span>
                 <span>Необычная</span>
               </div>
               <small>Выпадает реже</small>
@@ -581,26 +741,26 @@
 
             <div class="rarity">
               <div class="rarity-left">
-                <span class="dot" style="color:#3b82f6; background:#3b82f6;"></span>
+                <span class="dot" style="color:#3b82f6;background:#3b82f6;"></span>
                 <span>Редкая</span>
               </div>
-              <small>Хорошая награда</small>
+              <small>Даёт хороший профит</small>
             </div>
 
             <div class="rarity">
               <div class="rarity-left">
-                <span class="dot" style="color:#a855f7; background:#a855f7;"></span>
+                <span class="dot" style="color:#a855f7;background:#a855f7;"></span>
                 <span>Эпическая</span>
               </div>
-              <small>Сильный улов</small>
+              <small>Редкий и дорогой улов</small>
             </div>
 
             <div class="rarity">
               <div class="rarity-left">
-                <span class="dot" style="color:#fbbf24; background:#fbbf24;"></span>
+                <span class="dot" style="color:#fbbf24;background:#fbbf24;"></span>
                 <span>Легендарная</span>
               </div>
-              <small>Максимальный хайп</small>
+              <small>Максимальный хайп в чате</small>
             </div>
           </div>
         </section>
@@ -611,5 +771,17 @@
       made for stream • hustle_mxde
     </div>
   </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+  </script>
 </body>
 </html>
