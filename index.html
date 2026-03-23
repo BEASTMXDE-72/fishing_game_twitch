@@ -1,100 +1,597 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Рыбалка hustle_mxde</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Рыбалка hustle_mxde</title>
+  <style>
+    :root {
+      --bg-1: #07111f;
+      --bg-2: #0d1b2d;
+      --panel: rgba(17, 24, 39, 0.72);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --text: #eef4ff;
+      --muted: #9fb0cc;
+      --accent: #7c9cff;
+      --accent-2: #5eead4;
+      --gold: #fbbf24;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 22px;
+      --maxw: 980px;
+    }
 
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(180deg, #0f172a, #020617);
-    color: white;
-    text-align: center;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 30px 15px;
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-h1 {
-    font-size: 34px;
-    margin-bottom: 10px;
-}
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(94, 234, 212, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(124, 156, 255, 0.16), transparent 32%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-.card {
-    background: #111827;
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 16px;
-    width: 100%;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
-}
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      width: 380px;
+      height: 380px;
+      border-radius: 999px;
+      filter: blur(80px);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-.commands, .top {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    body::before {
+      left: -80px;
+      top: 80px;
+      background: #5eead4;
+    }
 
-.command {
-    margin: 6px 0;
-}
+    body::after {
+      right: -100px;
+      top: 160px;
+      background: #7c9cff;
+    }
 
-.top-item {
-    margin: 5px 0;
-}
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(var(--maxw), calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 50px;
+    }
 
-.footer {
-    margin-top: 30px;
-    opacity: 0.5;
-}
-</style>
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 34px 28px;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(124, 156, 255, 0.18), rgba(94, 234, 212, 0.1)),
+        rgba(8, 15, 27, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
 
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(124, 156, 255, 0.25), transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(124, 156, 255, 0.2), rgba(94, 234, 212, 0.12));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(124, 156, 255, 0.4);
+      background: linear-gradient(135deg, rgba(124, 156, 255, 0.3), rgba(94, 234, 212, 0.18));
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .card h2 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .sub {
+      margin: -4px 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .commands {
+      display: grid;
+      gap: 12px;
+    }
+
+    .command {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: left;
+    }
+
+    .command-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(124, 156, 255, 0.24), rgba(94, 234, 212, 0.16));
+      font-size: 20px;
+    }
+
+    .command strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+
+    .command span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .rarities {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rarity {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 15px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .rarity-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      box-shadow: 0 0 14px currentColor;
+    }
+
+    .rarity small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .top-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .top-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: left;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .place {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .player strong {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 15px;
+    }
+
+    .player span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .money {
+      font-weight: 800;
+      color: var(--gold);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tips {
+      display: grid;
+      gap: 12px;
+    }
+
+    .tip {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: left;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .tip strong {
+      display: inline-block;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 26px 20px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .shell {
+        width: min(var(--maxw), calc(100% - 16px));
+        padding-top: 16px;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .hero p {
+        font-size: 15px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .hero-btn {
+        justify-content: center;
+      }
+
+      .top-item {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .money {
+        margin-left: 46px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-badge">🎣 Мини-игра на стриме hustle_mxde</div>
+      <h1>Рыбалка в чате Twitch</h1>
+      <p>
+        Лови рыбу, зарабатывай рубли, попадай в топ и выбивай легендарные уловы.
+        Всё происходит прямо в чате — быстро, понятно и азартно.
+      </p>
+      <div class="hero-actions">
+        <a class="hero-btn" href="#commands">📌 Команды</a>
+        <a class="hero-btn" href="#top">🏆 Топ рыбаков</a>
+        <a class="hero-btn" href="#rarity">⭐ Редкости</a>
+      </div>
+    </section>
 
-<div class="container">
+    <div class="grid">
+      <div class="stack">
+        <section class="card" id="commands">
+          <h2>📌 Команды игры</h2>
+          <div class="sub">Всё самое важное для старта — в одном месте.</div>
 
-<h1>🎣 Рыбалка на канале hustle_mxde</h1>
-<p>Лови рыбу прямо в чате Twitch!</p>
+          <div class="commands">
+            <div class="command">
+              <div class="command-icon">🎣</div>
+              <div>
+                <strong>!рыбалка</strong>
+                <span>Закинуть удочку и попытаться поймать улов.</span>
+              </div>
+            </div>
 
-<div class="card">
-<h2>📌 Команды</h2>
-<div class="commands">
-<div class="command">🎣 <b>!рыбалка</b> - поймать рыбу</div>
-<div class="command">🫙 <b>!баланс</b> - твои деньги</div>
-<div class="command">📘 <b>!профиль</b> - твоя статистика</div>
-<div class="command">🏆 <b>!топ</b> - топ рыбаков</div>
-</div>
-</div>
+            <div class="command">
+              <div class="command-icon">🫙</div>
+              <div>
+                <strong>!баланс</strong>
+                <span>Посмотреть текущий баланс после рыбалки.</span>
+              </div>
+            </div>
 
-<div class="card">
-<h2>⭐ Редкости</h2>
-<div>Обычная → Необычная → Редкая → Эпическая → Легендарная</div>
-</div>
+            <div class="command">
+              <div class="command-icon">📘</div>
+              <div>
+                <strong>!профиль</strong>
+                <span>Увидеть свою игровую статистику и лучший улов.</span>
+              </div>
+            </div>
 
-<div class="card">
-<h2>🔥 Как играть?</h2>
-<p>Пиши <b>!рыбалка</b> в чат, зарабатывай деньги и становись лучшим рыбаком!</p>
-</div>
+            <div class="command">
+              <div class="command-icon">🏆</div>
+              <div>
+                <strong>!топ</strong>
+                <span>Открыть рейтинг лучших рыбаков на стриме.</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
-<div class="card">
-<h2>🏆 Топ рыбаков</h2>
-<div class="top" id="top-list">
-<div class="top-item">🥇 hustle_mxde — 999 руб</div>
-<div class="top-item">🥈 user2 — 500 руб</div>
-<div class="top-item">🥉 user3 — 300 руб</div>
-</div>
-</div>
+        <section class="card">
+          <h2>🔥 Как играть</h2>
+          <div class="tips">
+            <div class="tip">
+              <strong>1. Напиши !рыбалка</strong><br />
+              Бот сгенерирует случайный улов, редкость и награду.
+            </div>
+            <div class="tip">
+              <strong>2. Копи рубли</strong><br />
+              Деньги начисляются за успешные уловы и сохраняются между стримами.
+            </div>
+            <div class="tip">
+              <strong>3. Забирай место в топе</strong><br />
+              Чем больше ловишь, тем выше шанс подняться в рейтинг.
+            </div>
+          </div>
+        </section>
+      </div>
 
-<div class="footer">
-made for stream hustle_mxde 💜
-</div>
+      <div class="stack">
+        <section class="card" id="top">
+          <h2>🏆 Топ рыбаков</h2>
+          <div class="sub">Пока здесь заглушка. Позже подключим живые данные из бота.</div>
 
-</div>
+          <div class="top-list">
+            <div class="top-item">
+              <div class="top-left">
+                <div class="place">🥇</div>
+                <div class="player">
+                  <strong>@hustle_mxde</strong>
+                  <span>Главный рыбак канала</span>
+                </div>
+              </div>
+              <div class="money">999 ₽</div>
+            </div>
 
+            <div class="top-item">
+              <div class="top-left">
+                <div class="place">🥈</div>
+                <div class="player">
+                  <strong>@viewer_two</strong>
+                  <span>Уверенно держит темп</span>
+                </div>
+              </div>
+              <div class="money">640 ₽</div>
+            </div>
+
+            <div class="top-item">
+              <div class="top-left">
+                <div class="place">🥉</div>
+                <div class="player">
+                  <strong>@viewer_three</strong>
+                  <span>Борется за топ-1</span>
+                </div>
+              </div>
+              <div class="money">480 ₽</div>
+            </div>
+
+            <div class="top-item">
+              <div class="top-left">
+                <div class="place">4</div>
+                <div class="player">
+                  <strong>@viewer_four</strong>
+                  <span>Стабильные уловы</span>
+                </div>
+              </div>
+              <div class="money">320 ₽</div>
+            </div>
+
+            <div class="top-item">
+              <div class="top-left">
+                <div class="place">5</div>
+                <div class="player">
+                  <strong>@viewer_five</strong>
+                  <span>Подбирается всё ближе</span>
+                </div>
+              </div>
+              <div class="money">250 ₽</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="rarity">
+          <h2>⭐ Редкости</h2>
+          <div class="rarities">
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#94a3b8; background:#94a3b8;"></span>
+                <span>Обычная</span>
+              </div>
+              <small>Базовый улов</small>
+            </div>
+
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#22c55e; background:#22c55e;"></span>
+                <span>Необычная</span>
+              </div>
+              <small>Выпадает реже</small>
+            </div>
+
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#3b82f6; background:#3b82f6;"></span>
+                <span>Редкая</span>
+              </div>
+              <small>Хорошая награда</small>
+            </div>
+
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#a855f7; background:#a855f7;"></span>
+                <span>Эпическая</span>
+              </div>
+              <small>Сильный улов</small>
+            </div>
+
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#fbbf24; background:#fbbf24;"></span>
+                <span>Легендарная</span>
+              </div>
+              <small>Максимальный хайп</small>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="footer">
+      made for stream • hustle_mxde
+    </div>
+  </div>
 </body>
 </html>
