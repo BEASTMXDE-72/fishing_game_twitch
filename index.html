@@ -241,19 +241,10 @@
       transform: translateY(-3px);
       border-color: rgba(124, 156, 255, 0.35);
       box-shadow: 0 12px 28px rgba(124, 156, 255, 0.16);
+      background: linear-gradient(135deg, rgba(124, 156, 255, 0.26), rgba(94, 234, 212, 0.16));
     }
 
     .hero-btn:hover::before {
-      transform: translateX(120%);
-    }
-
-    .hero-btn.active {
-      border-color: rgba(124, 156, 255, 0.45);
-      box-shadow: 0 10px 24px rgba(124, 156, 255, 0.18);
-      background: linear-gradient(135deg, rgba(124, 156, 255, 0.30), rgba(94, 234, 212, 0.18));
-    }
-
-    .hero-btn.active::before {
       transform: translateX(120%);
     }
 
@@ -385,6 +376,13 @@
       color: var(--muted);
       line-height: 1.65;
       font-size: 14px;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
+    }
+
+    .tip:hover {
+      transform: translateX(4px);
+      border-color: rgba(124, 156, 255, 0.18);
+      background: rgba(255, 255, 255, 0.045);
     }
 
     .tip strong {
@@ -407,12 +405,13 @@
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: transform .22s ease, border-color .22s ease;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
     }
 
     .top-item:hover {
       transform: translateX(4px);
       border-color: rgba(124, 156, 255, 0.18);
+      background: rgba(255, 255, 255, 0.045);
     }
 
     .top-left {
@@ -473,6 +472,13 @@
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
+    }
+
+    .rarity:hover {
+      transform: translateX(4px);
+      border-color: rgba(124, 156, 255, 0.18);
+      background: rgba(255, 255, 255, 0.045);
     }
 
     .rarity-left {
@@ -624,10 +630,10 @@
       </p>
 
       <div class="hero-actions">
-        <a class="hero-btn" id="btn-commands" href="#commands">📌 Команды</a>
-        <a class="hero-btn" id="btn-top" href="#top">🏆 Топ рыбаков</a>
-        <a class="hero-btn" id="btn-how" href="#how">🔥 Как играть</a>
-        <a class="hero-btn" id="btn-rarity" href="#rarity">⭐ Редкости</a>
+        <a class="hero-btn" href="#commands">📌 Команды</a>
+        <a class="hero-btn" href="#top">🏆 Топ рыбаков</a>
+        <a class="hero-btn" href="#how">🔥 Как играть</a>
+        <a class="hero-btn" href="#rarity">⭐ Редкости</a>
       </div>
 
       <div class="hero-stats">
@@ -836,7 +842,6 @@
   </div>
 
   <script>
-    // Плавкое появление блоков
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -846,51 +851,6 @@
     }, { threshold: 0.12 });
 
     document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
-
-    // Подсветка активной кнопки
-    const sectionToButton = {
-      commands: document.getElementById("btn-commands"),
-      top: document.getElementById("btn-top"),
-      how: document.getElementById("btn-how"),
-      rarity: document.getElementById("btn-rarity"),
-    };
-
-    const sections = document.querySelectorAll("section[id]");
-
-    function setActiveButton(id) {
-      Object.values(sectionToButton).forEach((btn) => {
-        if (btn) btn.classList.remove("active");
-      });
-
-      const activeBtn = sectionToButton[id];
-      if (activeBtn) activeBtn.classList.add("active");
-    }
-    
-    const navObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveButton(entry.target.id);
-        }
-      });
-    }, {
-      rootMargin: "-20% 0px -55% 0px",
-      threshold: 0
-    });
-
-    sections.forEach((section) => navObserver.observe(section));
-
-    Object.entries(sectionToButton).forEach(([id, btn]) => {
-      if (!btn) return;
-      btn.addEventListener("click", () => {
-        setActiveButton(id);
-      });
-    });
-
-    window.addEventListener("load", () => {
-      Object.values(sectionToButton).forEach((btn) => {
-        if (btn) btn.classList.remove("active");
-      });
-    });
   </script>
 </body>
 </html>
