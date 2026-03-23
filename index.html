@@ -197,9 +197,8 @@
       box-shadow:0 12px 28px rgba(124,156,255,.16);
     }
     .hero-btn.active {
-      transform: translateY(-3px) scale(1.03);
       border-color: rgba(124,156,255,.45);
-      box-shadow: 0 12px 28px rgba(124,156,255,.20);
+      box-shadow: 0 10px 24px rgba(124,156,255,.18);
       background: linear-gradient(135deg, rgba(124,156,255,.30), rgba(94,234,212,.18));
     }
 
@@ -716,48 +715,6 @@
     </div>
   </div>
 
-<script>
-  // Плавкое появление блоков
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("show");
-      }
-    });
-  }, { threshold: 0.12 });
-
-  document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
-
-  // Подсветка активной кнопки в hero
-  const sectionToButton = {
-    commands: document.getElementById("btn-commands"),
-    top: document.getElementById("btn-top"),
-    how: document.getElementById("btn-how"),
-    rarity: document.getElementById("btn-rarity"),
-  };
-
-  const sections = document.querySelectorAll("section[id]");
-
-  function setActiveButton(id) {
-    Object.values(sectionToButton).forEach((btn) => {
-      if (btn) btn.classList.remove("active");
-    });
-
-    const activeBtn = sectionToButton[id];
-    if (activeBtn) activeBtn.classList.add("active");
-  }
-
-  const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        setActiveButton(entry.target.id);
-      }
-    });
-  }, {
-    threshold: 0.45
-  });
-
-  sections.forEach((section) => navObserver.observe(section));
-</script>
+setActiveButton("commands");
 </body>
 </html>
