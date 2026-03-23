@@ -865,9 +865,7 @@
       const activeBtn = sectionToButton[id];
       if (activeBtn) activeBtn.classList.add("active");
     }
-
-    setActiveButton("commands");
-
+    
     const navObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -885,6 +883,12 @@
       if (!btn) return;
       btn.addEventListener("click", () => {
         setActiveButton(id);
+      });
+    });
+
+    window.addEventListener("load", () => {
+      Object.values(sectionToButton).forEach((btn) => {
+        if (btn) btn.classList.remove("active");
       });
     });
   </script>
