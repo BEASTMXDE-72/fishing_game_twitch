@@ -14,38 +14,42 @@ body {
 }
 
 .container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px 15px;
 }
 
 h1 {
-    font-size: 32px;
+    font-size: 34px;
     margin-bottom: 10px;
 }
 
 .card {
     background: #111827;
-    padding: 15px;
-    margin: 15px 0;
-    border-radius: 12px;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 16px;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
-.commands {
-    text-align: left;
+.commands, .top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .command {
+    margin: 6px 0;
+}
+
+.top-item {
     margin: 5px 0;
 }
 
-.top {
-    text-align: left;
-}
-
 .footer {
-    margin-top: 20px;
-    opacity: 0.6;
+    margin-top: 30px;
+    opacity: 0.5;
 }
 </style>
 
