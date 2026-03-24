@@ -728,13 +728,12 @@
           </div>
         </section>
 
-        <section class="card legend-card reveal">
-          <div class="legend-badge">🌟 Последний легендарный улов</div>
-          <div class="legend-text">
-            Здесь позже можно показывать последнюю легендарную рыбу, пойманную на стриме,
-            чтобы страница выглядела живой и постоянно обновлялась.
-          </div>
-        </section>
+    <section class="card legend-card reveal">
+      <div class="legend-badge">🌟 Лучший улов за последний стрим</div>
+      <div class="legend-text" id="legendary-box">
+        Загрузка лучшего улова...
+      </div>
+    </section>
 
         <section class="card reveal" id="rarity">
           <h2>⭐ Редкости</h2>
@@ -790,7 +789,6 @@
   </div>
 
 <script>
-  // анимация появления
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -801,13 +799,13 @@
 
   document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
 
-  // загрузка топа
   async function loadTop() {
     try {
       const response = await fetch("./top.json");
       const data = await response.json();
 
       const container = document.getElementById("top-list");
+      if (!container) return;
 
       container.innerHTML = "";
 
@@ -824,17 +822,41 @@
             <div class="money">${player.money} ₽</div>
           </div>
         `;
-
         container.innerHTML += html;
       });
-
     } catch (error) {
-      document.getElementById("top-list").innerHTML = "Ошибка загрузки топа";
+      const container = document.getElementById("top-list");
+      if (container) {
+        container.innerHTML = "Ошибка загрузки топа";
+      }
+      console.error(error);
+    }
+  }
+
+  async function loadLegendary() {
+    try {
+      const response = await fetch("./legendary.json");
+      const data = await response.json();
+
+      const box = document.getElementById("legendary-box");
+      if (!box) return;
+
+      box.innerHTML = `
+        <strong>@${data.username}</strong> поймал <strong>${data.fish_name}</strong>
+        на <strong>${data.weight} кг</strong> и заработал
+        <strong>${data.gold} ₽</strong>.
+      `;
+    } catch (error) {
+      const box = document.getElementById("legendary-box");
+      if (box) {
+        box.innerHTML = "Данные о лучшем улове прошлого стрима пока не загружены.";
+      }
       console.error(error);
     }
   }
 
   loadTop();
+  loadLegendary();
 </script>
 </body>
 </html>
