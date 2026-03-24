@@ -1,67 +1,907 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Fishing Game</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body { font-family: Arial; background:#0f172a; color:#fff; margin:0; padding:20px;}
-.container { max-width:900px; margin:auto;}
-.card { background:#1e293b; padding:20px; border-radius:12px; margin-bottom:20px;}
-h1,h2 { margin-top:0;}
-.small { color:#94a3b8;}
-.highlight { color:#38bdf8;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Рыбалка hustle_mxde</title>
+
+  <style>
+    :root {
+      --bg-1: #07111f;
+      --bg-2: #0c1830;
+      --panel: rgba(10, 16, 30, 0.68);
+      --panel-strong: rgba(15, 24, 43, 0.82);
+      --border: rgba(255, 255, 255, 0.09);
+      --text: #eef4ff;
+      --muted: #9db0cf;
+      --accent: #7c9cff;
+      --accent-2: #5eead4;
+      --gold: #fbbf24;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+      --radius: 24px;
+      --maxw: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 15%, rgba(94, 234, 212, 0.14), transparent 22%),
+        radial-gradient(circle at 90% 10%, rgba(124, 156, 255, 0.16), transparent 26%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.10), transparent 20%),
+        linear-gradient(180deg, var(--bg-2), var(--bg-1));
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-orb,
+    .bg-orb2,
+    .bg-orb3 {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(70px);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatOrb 10s ease-in-out infinite;
+    }
+
+    .bg-orb {
+      width: 260px;
+      height: 260px;
+      left: -60px;
+      top: 70px;
+      background: #5eead4;
+    }
+
+    .bg-orb2 {
+      width: 320px;
+      height: 320px;
+      right: -90px;
+      top: 120px;
+      background: #7c9cff;
+      animation-delay: -3s;
+    }
+
+    .bg-orb3 {
+      width: 240px;
+      height: 240px;
+      left: 50%;
+      bottom: 20px;
+      background: #a855f7;
+      animation-delay: -6s;
+    }
+
+    @keyframes floatOrb {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+      }
+      50% {
+        transform: translateY(-18px) translateX(10px);
+      }
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -40px;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.12);
+      animation: rise linear infinite;
+    }
+
+    .bubble:nth-child(1) { left: 8%;  animation-duration: 16s; animation-delay: 0s; }
+    .bubble:nth-child(2) { left: 18%; width: 7px;  height: 7px;  animation-duration: 20s; animation-delay: 2s; }
+    .bubble:nth-child(3) { left: 28%; width: 12px; height: 12px; animation-duration: 18s; animation-delay: 5s; }
+    .bubble:nth-child(4) { left: 40%; width: 9px;  height: 9px;  animation-duration: 22s; animation-delay: 1s; }
+    .bubble:nth-child(5) { left: 54%; width: 6px;  height: 6px;  animation-duration: 17s; animation-delay: 4s; }
+    .bubble:nth-child(6) { left: 66%; width: 11px; height: 11px; animation-duration: 21s; animation-delay: 3s; }
+    .bubble:nth-child(7) { left: 78%; width: 8px;  height: 8px;  animation-duration: 19s; animation-delay: 7s; }
+    .bubble:nth-child(8) { left: 89%; width: 13px; height: 13px; animation-duration: 24s; animation-delay: 6s; }
+
+    @keyframes rise {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-115vh) scale(1.4);
+        opacity: 0;
+      }
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(var(--maxw), calc(100% - 24px));
+      margin: 0 auto;
+      padding: 18px 0 56px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 40px 28px;
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(124, 156, 255, 0.18), rgba(94, 234, 212, 0.09)),
+        rgba(9, 15, 27, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(124, 156, 255, 0.24), transparent 68%);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: -60px;
+      bottom: -60px;
+      width: 240px;
+      height: 240px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(94, 234, 212, 0.16), transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      max-width: 820px;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 18px;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(124, 156, 255, 0.20), rgba(94, 234, 212, 0.12));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+
+    .hero-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 10%, rgba(255, 255, 255, 0.18) 45%, transparent 80%);
+      transform: translateX(-120%);
+      transition: transform .5s ease;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-3px);
+      border-color: rgba(124, 156, 255, 0.35);
+      box-shadow: 0 12px 28px rgba(124, 156, 255, 0.16);
+      background: linear-gradient(135deg, rgba(124, 156, 255, 0.26), rgba(94, 234, 212, 0.16));
+    }
+
+    .hero-btn:hover::before {
+      transform: translateX(120%);
+    }
+
+    .hero-stats {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .hero-stat {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .hero-stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124, 156, 255, 0.16);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.35);
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 23px;
+      letter-spacing: -0.02em;
+    }
+
+    .sub {
+      margin: -2px 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .commands {
+      display: grid;
+      gap: 12px;
+    }
+
+    .command {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 15px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: left;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
+    }
+
+    .command:hover,
+    .tip:hover,
+    .top-item:hover,
+    .rarity:hover {
+      transform: translateX(4px);
+      border-color: rgba(124, 156, 255, 0.18);
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .command-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(124, 156, 255, 0.26), rgba(94, 234, 212, 0.15));
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      font-size: 20px;
+    }
+
+    .command strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+
+    .command span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .tips,
+    .top-list,
+    .rarities {
+      display: grid;
+      gap: 12px;
+    }
+
+    .tip,
+    .top-item,
+    .rarity {
+      padding: 15px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: left;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
+    }
+
+    .tip {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .tip strong {
+      color: var(--text);
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .top-item,
+    .rarity {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .top-left,
+    .rarity-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .place {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.06);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      text-align: left;
+    }
+
+    .player strong {
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .player span,
+    .rarity small,
+    .empty-state,
+    .legend-meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .money {
+      font-weight: 900;
+      color: var(--gold);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      box-shadow: 0 0 14px currentColor;
+    }
+
+    .legend-card {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(251, 191, 36, 0.14), rgba(168, 85, 247, 0.10)),
+        var(--panel-strong);
+    }
+
+    .legend-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.35), rgba(168, 85, 247, 0.25), rgba(124, 156, 255, 0.20));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .legend-badge {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      color: #ffe7a3;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .legend-layout {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .legend-user {
+      font-size: 14px;
+      color: #ffe7a3;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .legend-fish {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .legend-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      font-weight: 800;
+    }
+
+    .legend-text {
+      margin-top: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      opacity: 0.82;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: none;
+    }
+
+    section[id] {
+      scroll-margin-top: 32px;
+    }
+
+    @media (max-width: 920px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(var(--maxw), calc(100% - 16px));
+        padding-top: 10px;
+      }
+
+      .hero {
+        padding: 28px 18px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .hero-btn {
+        justify-content: center;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .top-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .money {
+        margin-left: 48px;
+      }
+
+      .legend-fish {
+        font-size: 22px;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
+  <div class="bg-orb"></div>
+  <div class="bg-orb2"></div>
+  <div class="bg-orb3"></div>
 
-<h1>🎣 Рыбалка на стриме</h1>
-<p class="small">Лови рыбу, зарабатывай и попадай в топ</p>
+  <div class="particles">
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+  </div>
 
-<div class="card">
-<h2>🏆 Топ игроков</h2>
-<div id="top">Загрузка...</div>
-</div>
+  <div class="shell">
+    <section class="hero reveal">
+      <div class="hero-badge">🎮 Мини-игра прямо в Twitch-чате</div>
+      <h1>Лови рыбу, копи рубли и забирай топ стрима</h1>
+      <p>
+        Пиши команды в чате, выбивай редкие уловы, лови легендарную рыбу и
+        поднимайся в рейтинге рыбаков канала hustle_mxde.
+      </p>
 
-<div class="card">
-<h2>🐟 Лучший улов стрима</h2>
-<div id="legendary">Пока нет данных</div>
-</div>
+      <div class="hero-actions">
+        <a class="hero-btn" href="#commands">📌 Команды</a>
+        <a class="hero-btn" href="#top">🏆 Топ рыбаков</a>
+        <a class="hero-btn" href="#how">🔥 Как играть</a>
+        <a class="hero-btn" href="#rarity">⭐ Редкости</a>
+      </div>
 
-<div class="card">
-<h2>ℹ️ Что важно знать</h2>
-<p>Прогресс сохраняется между стримами.</p>
-<p>Сайт обновляется после окончания стрима.</p>
-</div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>5</strong>
+          <span>уровней редкости</span>
+        </div>
+        <div class="hero-stat">
+          <strong>∞</strong>
+          <span>шансов ворваться в топ-1</span>
+        </div>
+        <div class="hero-stat">
+          <strong>24/7</strong>
+          <span>прогресс сохраняется</span>
+        </div>
+      </div>
+    </section>
 
-</div>
+    <div class="grid">
+      <div class="stack">
+        <section class="card reveal" id="commands">
+          <h2>📌 Команды игры</h2>
+          <div class="sub">Всё самое важное для старта — быстро и понятно.</div>
+
+          <div class="commands">
+            <div class="command">
+              <div class="command-icon">🎣</div>
+              <div>
+                <strong>!рыбалка</strong>
+                <span>Закинуть удочку и получить случайный улов.</span>
+              </div>
+            </div>
+
+            <div class="command">
+              <div class="command-icon">🫙</div>
+              <div>
+                <strong>!баланс</strong>
+                <span>Посмотреть, сколько рублей уже удалось заработать.</span>
+              </div>
+            </div>
+
+            <div class="command">
+              <div class="command-icon">📘</div>
+              <div>
+                <strong>!профиль</strong>
+                <span>Открыть свою статистику и лучший улов.</span>
+              </div>
+            </div>
+
+            <div class="command">
+              <div class="command-icon">🏆</div>
+              <div>
+                <strong>!топ</strong>
+                <span>Посмотреть рейтинг лучших рыбаков на стриме.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card reveal" id="how">
+          <h2>🔥 Как играть</h2>
+
+          <div class="tips">
+            <div class="tip">
+              <strong>1. Напиши !рыбалка</strong><br>
+              Бот случайно выберет рыбу, редкость, вес и награду.
+            </div>
+            <div class="tip">
+              <strong>2. Копи рубли</strong><br>
+              Все деньги за уловы сохраняются между стримами.
+            </div>
+            <div class="tip">
+              <strong>3. Следи за профилем</strong><br>
+              Команда <b>!профиль</b> показывает твой прогресс и лучший улов.
+            </div>
+            <div class="tip">
+              <strong>4. Поднимайся в рейтинге</strong><br>
+              Чем активнее рыбачишь, тем выше забираешься в топе.
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section class="card reveal" id="top">
+          <h2>🏆 Топ рыбаков</h2>
+          <div class="sub">Лучшие рыбаки канала по итогам последнего стрима.</div>
+
+          <div class="top-list" id="top-list">
+            <div class="empty-state">Загрузка топа...</div>
+          </div>
+        </section>
+
+        <section class="card legend-card reveal">
+          <div class="legend-badge">🌟 Лучший улов за последний стрим</div>
+          <div class="legend-text" id="legendary-box">
+            Загрузка лучшего улова...
+          </div>
+        </section>
+
+        <section class="card reveal" id="rarity">
+          <h2>⭐ Редкости</h2>
+
+          <div class="rarities">
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#94a3b8;background:#94a3b8;"></span>
+                <span>Обычная</span>
+              </div>
+              <small>Базовый улов</small>
+            </div>
+
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#22c55e;background:#22c55e;"></span>
+                <span>Необычная</span>
+              </div>
+              <small>Выпадает реже</small>
+            </div>
+
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#3b82f6;background:#3b82f6;"></span>
+                <span>Редкая</span>
+              </div>
+              <small>Даёт солидную награду</small>
+            </div>
+
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#a855f7;background:#a855f7;"></span>
+                <span>Эпическая</span>
+              </div>
+              <small>Редкий и дорогой улов</small>
+            </div>
+
+            <div class="rarity">
+              <div class="rarity-left">
+                <span class="dot" style="color:#fbbf24;background:#fbbf24;"></span>
+                <span>Легендарная</span>
+              </div>
+              <small>Максимальный хайп в чате</small>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="footer">
+      made for stream • hustle_mxde
+    </div>
+  </div>
 
 <script>
-fetch('top.json')
-.then(r=>r.json())
-.then(data=>{
-  const el=document.getElementById('top');
-  el.innerHTML='';
-  data.top.forEach((p,i)=>{
-    el.innerHTML += `<div>#${i+1} ${p.username} — ${p.balance} ₽</div>`;
-  });
-})
-.catch(()=>{document.getElementById('top').innerText='Топ обновится после стрима';});
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+      }
+    });
+  }, { threshold: 0.12 });
 
-fetch('legendary.json')
-.then(r=>r.json())
-.then(d=>{
-  const el=document.getElementById('legendary');
-  el.innerHTML = `
-    <div><b>@${d.username}</b></div>
-    <div class="highlight">${d.fish_name}</div>
-    <div>${d.weight} кг</div>
-    <div>${d.gold} ₽</div>
-  `;
-})
-.catch(()=>{document.getElementById('legendary').innerText='Появится после легендарного улова';});
+  document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function formatMoney(player) {
+    const amount = player.money ?? player.balance ?? 0;
+    return `${amount} ₽`;
+  }
+
+  function formatPlace(player, index) {
+    return player.place ?? String(index + 1);
+  }
+
+  function formatSubtitle(player, index) {
+    if (player.subtitle) return player.subtitle;
+    const subtitles = [
+      "Главный рыбак канала",
+      "Очень близок к топ-1",
+      "Уверенно держится в топе",
+      "Стабильные уловы",
+      "Врывается в рейтинг"
+    ];
+    return subtitles[index] ?? "Рыбак канала";
+  }
+
+  async function loadTop() {
+    const container = document.getElementById("top-list");
+    if (!container) return;
+
+    try {
+      const response = await fetch("./top.json", { cache: "no-store" });
+      if (!response.ok) throw new Error("top.json not found");
+
+      const data = await response.json();
+      const top = Array.isArray(data.top) ? data.top : [];
+
+      if (!top.length) {
+        container.innerHTML = '<div class="empty-state">Топ появится после первого активного стрима.</div>';
+        return;
+      }
+
+      container.innerHTML = "";
+
+      top.forEach((player, index) => {
+        const html = `
+          <div class="top-item">
+            <div class="top-left">
+              <div class="place">${escapeHtml(formatPlace(player, index))}</div>
+              <div class="player">
+                <strong>@${escapeHtml(player.username ?? "viewer")}</strong>
+                <span>${escapeHtml(formatSubtitle(player, index))}</span>
+              </div>
+            </div>
+            <div class="money">${escapeHtml(formatMoney(player))}</div>
+          </div>
+        `;
+        container.insertAdjacentHTML("beforeend", html);
+      });
+    } catch (error) {
+      container.innerHTML = '<div class="empty-state">Топ обновится после следующего стрима.</div>';
+      console.error(error);
+    }
+  }
+
+  async function loadLegendary() {
+    const box = document.getElementById("legendary-box");
+    if (!box) return;
+
+    try {
+      const response = await fetch("./legendary.json", { cache: "no-store" });
+      if (!response.ok) throw new Error("legendary.json not found");
+
+      const data = await response.json();
+
+      if (!data || !data.username || !data.fish_name) {
+        box.innerHTML = "Легендарный улов появится здесь после следующего стрима.";
+        return;
+      }
+
+      box.innerHTML = `
+        <div class="legend-layout">
+          <div class="legend-user">@${escapeHtml(data.username)}</div>
+          <div class="legend-fish">${escapeHtml(data.fish_name)}</div>
+          <div class="legend-stats">
+            <div class="legend-pill">⚖️ ${escapeHtml(data.weight)} кг</div>
+            <div class="legend-pill">💰 ${escapeHtml(data.gold)} ₽</div>
+          </div>
+          <div class="legend-meta">Лучший легендарный улов прошлого стрима.</div>
+        </div>
+      `;
+    } catch (error) {
+      box.innerHTML = "Данные о лучшем улове прошлого стрима пока не загружены.";
+      console.error(error);
+    }
+  }
+
+  loadTop();
+  loadLegendary();
 </script>
-
 </body>
 </html>
